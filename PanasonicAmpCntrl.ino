@@ -20,31 +20,27 @@ int TrebleInt = 128;
 int BalanceInt = 128;
 int FaderInt = 128;
 int SpeedInt = 0;
-String CenterString = "0";
-String SubString = "0";
+byte CenterByte = 0x0;
+byte SubByte = 0x0;
 
-String Byte01 = String(19, HEX);  //0x13
-String Byte02 = String(14, HEX);  //0x0E
-String Byte03 = String(1, HEX);   //0x01
-String Byte04 = String(16, HEX);  //0x10 or 0x20 (dec 32)
-String Byte05 = String(0, HEX);   //0x00 (Volume 0)
-String Byte06 = String(128, HEX); //0x80 (Bass 0)
-String Byte07 = String(128, HEX); //0x80 (Treble 0)
-String Byte08 = String(128, HEX); //0x80 (Balance 0)
-String Byte09 = String(128, HEX); //0x80 (Fader 0)
-String Byte10 = String(0, HEX);   //0x00 (Speed 0)
-String Byte11_1 = String("0");     //0x0 (Center 0)
-String Byte11_2 = String("0");     //0x0 (Sub 0)
-String Byte11 = String("00");     //0x00 (Center 0, Sub 0)
-String Byte12 = String(0, HEX);   //0x00
-String Byte13 = String(0, HEX);   //0x00 (Beep: 0x21, 0x22, 0x23)
-String Byte14 = String(0, HEX);   //0x00
-String Byte15 = String(0, HEX);   //0x00
-String Byte16 = String(206, HEX); //0xCE (CRC)
-
-String MessageToAmpWoCrc[15];
-String MessageToAmpWithCrc[16];
-
+int Byte01 = 19;    //0x13
+int Byte02 = 14;    //0x0E
+int Byte03 = 1;     //0x01
+int Byte04 = 16;    //0x10 or 0x20 (dec 32)
+int Byte05 = 0;     //0x00 (Volume 0)
+int Byte06 = 128;   //0x80 (Bass 0)
+int Byte07 = 128;   //0x80 (Treble 0)
+int Byte08 = 128;   //0x80 (Balance 0)
+int Byte09 = 128;   //0x80 (Fader 0)
+int Byte10 = 0;     //0x00 (Speed 0)
+byte Byte11_1 = 0x0;   //0x0 (Center 0)
+byte Byte11_2 = 0x0;   //0x0 (Sub 0)
+int Byte11 = 0;     //0x00 (Center 0, Sub 0)
+int Byte12 = 0;     //0x00
+int Byte13 = 0;     //0x00 (Beep: 0x21, 0x22, 0x23)
+int Byte14 = 0;     //0x00
+int Byte15 = 0;     //0x00
+int Byte16 = 206;   //0xCE (CRC)
 
 void setup() {
   
@@ -70,10 +66,14 @@ void loop() {
             else if(VolumeInt > 255){
               VolumeInt = 255;
             }
-            Byte05 = String(VolumeInt, HEX);
+            Byte05 = VolumeInt;
         }
         else if(command.equals("Bass")){
             Bass = Serial.readStringUntil('\n');
+
+             //float count = (float)256/12;
+             //count = count * (-1+6);
+             //int BassInt = (int)(count + .5);
 
             switch (Bass.toInt()) {
               case -6:
@@ -118,7 +118,7 @@ void loop() {
               default:
                 BassInt = 128;
              }
-             Byte06 = String(BassInt, HEX);
+             Byte06 = BassInt;
         }
         else if(command.equals("Treble")){
             Treble = Serial.readStringUntil('\n');
@@ -166,7 +166,7 @@ void loop() {
               default:
                 TrebleInt = 128;
              }
-             Byte07 = String(TrebleInt, HEX);
+             Byte07 = TrebleInt;
         }
         else if(command.equals("Balance")){
             Balance = Serial.readStringUntil('\n');
@@ -232,7 +232,7 @@ void loop() {
               default:
                 BalanceInt = 128;
              }
-             Byte08 = String(BalanceInt, HEX);
+             Byte08 = BalanceInt;
         }
         else if(command.equals("Fader")){
             Fader = Serial.readStringUntil('\n');
@@ -298,105 +298,107 @@ void loop() {
               default:
                 FaderInt = 128;
              }
-             Byte09 = String(FaderInt, HEX);
+             Byte09 = FaderInt;
         }
         else if(command.equals("Center")){
             Center = Serial.readStringUntil('\n');
 
             switch (Center.toInt()) {
               case -6:
-                CenterString = "A";
+                CenterByte = 0xA;
                 break;
               case -5:
-                CenterString = "B";
+                CenterByte = 0xB;
                 break;
               case -4:
-                CenterString = "C";
+                CenterByte = 0xC;
                 break;
               case -3:
-                CenterString = "D";
+                CenterByte = 0xD;
                 break;
               case -2:
-                CenterString = "E";
+                CenterByte = 0xE;
                 break;
               case -1:
-                CenterString = "F";
+                CenterByte = 0xF;
                 break;
               case 0:
-                CenterString = "0";
+                CenterByte = 0x0;
                 break;
               case 1:
-                CenterString = "1";
+                CenterByte = 0x1;
                 break;
               case 2:
-                CenterString = "2";
+                CenterByte = 0x2;
                 break;
               case 3:
-                CenterString = "3";
+                CenterByte = 0x3;
                 break;
               case 4:
-                CenterString = "4";
+                CenterByte = 0x4;
                 break;
               case 5:
-                CenterString = "5";
+                CenterByte = 0x5;
                 break;
               case 6:
-                CenterString = "6";
+                CenterByte = 0x6;
                 break;
               default:
-                CenterString = "0";
+                CenterByte = 0x0;
              }
-             Byte11_1 = CenterString;
-             Byte11 = Byte11_1 + Byte11_2;
+             Byte11_1 = CenterByte;
+             byte Byte11Byte = Byte11_1 << 4 | Byte11_2;
+             Byte11 = int(Byte11Byte);
         }
         else if(command.equals("Sub")){
             Sub = Serial.readStringUntil('\n');
 
             switch (Sub.toInt()) {
               case -6:
-                SubString = "A";
+                SubByte = 0xA;
                 break;
               case -5:
-                SubString = "B";
+                SubByte = 0xB;
                 break;
               case -4:
-                SubString = "C";
+                SubByte = 0xC;
                 break;
               case -3:
-                SubString = "D";
+                SubByte = 0xD;
                 break;
               case -2:
-                SubString = "E";
+                SubByte = 0xE;
                 break;
               case -1:
-                SubString = "F";
+                SubByte = 0xF;
                 break;
               case 0:
-                SubString = "0";
+                SubByte = 0x0;
                 break;
               case 1:
-                SubString = "1";
+                SubByte = 0x1;
                 break;
               case 2:
-                SubString = "2";
+                SubByte = 0x2;
                 break;
               case 3:
-                SubString = "3";
+                SubByte = 0x3;
                 break;
               case 4:
-                SubString = "4";
+                SubByte = 0x4;
                 break;
               case 5:
-                SubString = "5";
+                SubByte = 0x5;
                 break;
               case 6:
-                SubString = "6";
+                SubByte = 0x6;
                 break;
               default:
-                SubString = "0";
+                SubByte = 0x0;
              }
-             Byte11_2 = SubString;
-             Byte11 = Byte11_1 + Byte11_2;
+             Byte11_2 = SubByte;
+             byte Byte11Byte = Byte11_1 << 4 | Byte11_2;
+             Byte11 = int(Byte11Byte);
         }
         else if(command.equals("Speed")){
             Speed = Serial.readStringUntil('\n');
@@ -408,40 +410,68 @@ void loop() {
             else if(SpeedInt > 255){
               SpeedInt = 255;
             }
-            Byte10 = String(SpeedInt, HEX);
+            Byte10 = SpeedInt;
         }
         else{
             Serial.println("Invalid command");
         }
     }
 
-  MessageToAmpWoCrc = {Byte01, Byte02, Byte03, Byte04, Byte05, Byte06, Byte07, Byte08, Byte09, Byte10, Byte11, Byte12, Byte13, Byte14, Byte15};
-  Byte16 = String(getCRC(MessageToAmpWoCrc,14), HEX);
-  MessageToAmpWithCrc = {Byte01, Byte02, Byte03, Byte04, Byte05, Byte06, Byte07, Byte08, Byte09, Byte10, Byte11, Byte12, Byte13, Byte14, Byte15, Byte16};
+  int MessageToAmpWoCrc[15] = {Byte01, Byte02, Byte03, Byte04, Byte05, Byte06, Byte07, Byte08, Byte09, Byte10, Byte11, Byte12, Byte13, Byte14, Byte15};
 
+  //Serial.print("CRC: ");
+  //Serial.println(getCRC(MessageToAmpWoCrc,14));
+
+  Byte16 = getCRC(MessageToAmpWoCrc,14);
+  
+  int MessageToAmpWithCrc[16] = {Byte01, Byte02, Byte03, Byte04, Byte05, Byte06, Byte07, Byte08, Byte09, Byte10, Byte11, Byte12, Byte13, Byte14, Byte15, Byte16};
+
+  //const int message[] = {19, 14, 1, 16, 80, 128, 128, 128, 2, 0, 0, 0, 0, 0, 0, 252};
+
+  for (int i=0; i <= 15; i++){
+    RS485.write(MessageToAmpWithCrc[i]);
+    Serial.print(MessageToAmpWithCrc[i], HEX);
+    Serial.print(" ");
+  }
+  Serial.println(" ");
+  
+  Serial.print("Volume: ");
+  Serial.print(VolumeInt);
+  Serial.print(", Bass: ");
+  Serial.print(BassInt);
+  Serial.print(", Treble: ");
+  Serial.print(TrebleInt);
+  Serial.print(", Balance: ");
+  Serial.print(BalanceInt);
+  Serial.print(", Fader: ");
+  Serial.print(FaderInt);
+  Serial.print(", Center : ");
+  Serial.print(CenterByte);
+  Serial.print(", Sub : ");
+  Serial.println(SubByte);
   
   if (RS485.available()) 
   {
-    RX = RS485.read();   // Read the byte 
-    
-    Serial.println(RX, HEX);
-    //Serial.write(RX);   
-    }
-  else {Serial.println("Oops!!!");  // print this if serial is not available
-  delay(1000);}
+  //  RX = RS485.read();   // Read the byte 
+  //  
+    Serial.println(RS485.read());
+  //  //Serial.write(RX);   
+  //  }
+  //else {Serial.println("Oops!!!");  // print this if serial is not available
+  }
+  delay(100);
 }
 
-unsigned char getCRC(unsigned char message[], unsigned char length)
+int getCRC(int message[], int length)
 {
-  unsigned char i, j, crc = 0;
+  int i, j, crc = 0;
 
   for (i = 0; i < length; i++)
   {
     crc = crc + message[i];
   }
 
-  while(crc > 255)
-    crc = crc << 1;
+  crc = crc % 256;
 
   crc = 256 - crc;
 
